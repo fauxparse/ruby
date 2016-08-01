@@ -1,0 +1,390 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>What’s not to like about Ruby?</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+          <h1>What’s not to like about Ruby?</h1>
+          <h2>Matt Powell</h2>
+          <h3>Powershop, 1 August 2016</h3>
+        </section>
+
+				<section>
+          <pre><code class="ruby" data-trim data-noescape>
+            5.times { print "Odelay!" }
+          </code></pre>
+        </section>
+
+				<section>
+          <pre><code class="ruby" data-trim data-noescape>
+            exit unless "restaurant".include? "aura"
+          </code></pre>
+        </section>
+
+				<section>
+          <pre><code class="ruby" data-trim data-noescape>
+            ['toast', 'cheese', 'wine'].each { |food| print food.capitalize  }
+          </code></pre>
+        </section>
+
+				<section>
+          <h3>Variables</h3>
+          <pre><code class="ruby">teddy_bear_fee = 121.08</code></pre>
+          <h3>Classes</h3>
+          <pre><code class="ruby">class CrustyOrphanage &lt; Building; end</code></pre>
+          <h3>Constants</h3>
+          <pre><code class="ruby">
+class Color
+  POWERSHOP_PINK = Color.new(250, 14, 106)
+end
+
+Color::POWERSHOP_PINK
+          </code></pre>
+        </section>
+
+				<section>
+          <h3>Arrays</h3>
+          <pre><code class="ruby">['coat', 'mittens', 'snowboard']</code></pre>
+          <h3>Hashes</h3>
+          <pre><code class="ruby">
+{
+  'name' => 'Peter',
+  'profession' => 'lion tamer',
+  'great love' => 'flannel'
+}
+          </code></pre>
+        </section>
+
+				<section>
+          <h3>Symbols</h3>
+          <pre><code class="ruby">:success</code></pre>
+          <h3 class="fragment">Symbols as hash keys</h3>
+          <div class="fragment">
+            <pre><code class="ruby">
+{
+  :name => 'Peter',
+  :profession => 'lion tamer',
+  :great_love => 'flannel'
+}
+            </code></pre>
+          </div>
+          <div class="fragment">
+            <pre><code class="ruby">
+{
+  name: 'Peter',
+  profession: 'lion tamer',
+  great_love: 'flannel'
+}
+            </code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h2>Tricks with strings</h2>
+
+          <pre><code class="ruby" data-trim data-noescape>
+name = "Powelly"
+"Hello, #{name}"<span class="fragment"> # => "Hello, Powelly"</span><span class="fragment">
+'Hello, #{name}'<span class="fragment"> # => "Hello, #{name}"</span></span><span class="fragment">
+%Q{Hello, "#{name}"}<span class="fragment"> # => "Hello, \"Powelly\""</span></span><span class="fragment">
+%w(lions tigers bears)<span class="fragment"> # => ["lions", "tigers", "bears"]</span></span>
+          </code></pre>
+
+        </section>
+
+        <section>
+          <h2>Classes</h2>
+          <pre><code class="ruby">
+class Door
+  def initialize(color)
+    @color = color
+    @open = false
+  end
+
+  def open?
+    @open
+  end
+end
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Instances</h2>
+          <pre><code class="ruby" data-trim data-noescape>
+door = Door.new(Color::RED) <span class="fragment"># =&gt; #&lt;Door:0x007f9d9a1a1618 @open=false @color="red"&gt;</span>
+
+door.color <span class="fragment"># =&gt; NoMethodError: undefined method `color'</span>
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Accessors</h2>
+          <pre><code class="ruby" data-trim data-noescape>
+class Door
+  def color
+    @color
+  end
+end
+
+door.color <span class="fragment"># =&gt; "red"</span>
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Accessors</h2>
+          <pre><code class="ruby" data-trim data-noescape>
+class Door
+  attr_reader :color
+end
+
+door.color <span class="fragment"># =&gt; "red"</span>
+          </code></pre>
+
+          <pre class="fragment"><code class="ruby">attr_reader, attr_writer, attr_accessor</code></pre>
+
+        </section>
+
+        <section>
+          <h2>Methods</h2>
+          <pre><code class="ruby" data-trim data-noescape>
+class Door
+  def initialize(color<span class="fragment"> = Color::RED</span>)
+    @color = color
+  end<span class="fragment">
+
+  def paint(color, options = {})
+    @color = color
+    @style = options[:style]
+  end</span>
+end
+<span class="fragment">
+door.paint(Color::PINK)</span><span class="fragment">
+door.paint(Color::PINK, { style: :striped })</span><span class="fragment">
+door.paint(Color::PINK, style: :striped)</span>
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Keyword arguments</h2>
+          <pre><code class="ruby" data-trim data-noescape>
+class Door
+  def paint(color, style:<span class="fragment" data-fragment-index="3"> :solid</span>)
+    @color = color
+    @style = style
+  end</span>
+end
+<span class="fragment" data-fragment-index="1">
+door.paint(Color::PINK, style: :striped)</span><span class="fragment" data-fragment-index="2">
+door.paint(Color::PINK)</span>
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Queries and bangs</h2>
+          <pre><code class="ruby" data-trim data-noescape>
+class Door<span class="fragment">
+  def open?
+    <span class="fragment">!!</span>@open
+  end</span><span class="fragment">
+
+  def paint!
+    @color = Color::BLACK
+  end</span>
+end
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Class methods</h2>
+          <pre><code class="ruby" data-trim data-noescape>
+class Door
+  def initialize
+<span class="fragment">    @@number_of_doors ||= 0
+</span>    @@number_of_doors += 1
+  end<span class="fragment">
+
+  def self.count
+    @@number_of_doors
+  end</span>
+end
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Inheritance</h2>
+          <pre><code class="ruby" data-trim data-noescape>
+class Animal
+  def pat
+    @number_of_pats ||= 0
+    @number_of_pats += 1
+  end
+end
+
+class Cat &lt; Animal
+  def pat
+    super
+    claw_violently if rand &lt; 0.2
+  end
+end
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Mixins</h2>
+
+          <pre><code class="ruby" data-trim data-noescape>
+module Pattable
+  def pat
+    (@number_of_pats ||= 0) += 1
+  end
+end
+
+class Cat
+  include Pattable<span class="fragment" data-fragment-index="1">
+  extend Mastery</span><span class="fragment" data-fragment-index="2">
+
+  def pat
+    super
+    claw_violently if rand &lt; 0.2
+  end</span>
+end
+
+tripitaka = Cat.new
+tripitaka.respond_to?(:pat) # => true<span class="fragment" data-fragment-index="1">
+
+Cat.will_rule_us_all? # => true</span>
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Blocks</h2>
+
+          <pre><code class="ruby" data-trim data-noescape>
+2.times { jump }
+          </code></pre>
+
+          <pre><code class="ruby" data-trim data-noescape>
+zoo.each do |animal|
+  animal.pat
+end
+          </code></pre>
+
+          <pre class="fragment"><code class="ruby" data-trim data-noescape>
+zoo.each { |animal| animal.pat }
+          </code></pre>
+
+          <pre class="fragment"><code class="ruby" data-trim data-noescape>
+zoo.each(&:pat)
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>&amp;, yield, and block_given?</h2>
+
+          <pre class="fragment"><code class="ruby" data-trim data-noescape>
+class Zoo
+  def tour(&amp;block)
+    @animals.each do |animal|
+      animal.count_as_visited
+      yield animal if block_given?
+    end
+  end
+end
+
+zoo.tour { |animal| Photo.new(animal) }
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Fun with blocks</h2>
+
+          <pre class="fragment"><code class="ruby" data-trim data-noescape>
+zoo.animals.reject(&amp;:dangerous?).each(&amp;:pat)<span class="fragment">
+
+memories = zoo.animals.each.with_object([]) do |animal, album|
+  album &lt;&lt; Photo.new(animal)
+end
+</span><span class="fragment">
+memories = zoo.animals.map { |animal| Photo.new(animal) }
+</span><span class="fragment">
+memories = zoo.animals.map(&Photo.method(:new))
+</span>
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>In general…</h2>
+
+          <ul>
+            <li class="fragment">Favour <b>composition</b> over inheritance</li>
+            <li class="fragment">Check <b>ability</b>, not type</li>
+            <li class="fragment">Use <b>block constructs</b> (<code>map</code>, <code>each</code>, <code>all?</code>)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Good Ruby style</h2>
+
+          <ul>
+            <li class="fragment">Two spaces, <b>not</b> tabs</li>
+            <li class="fragment">Spaces <code>{ :inside => 'hashes' }</code></li>
+            <li class="fragment">…but not <code>['in', 'arrays'] </code></li>
+            <li class="fragment">…<code>or(:method, :calls)</code></li>
+            <li class="fragment">Use postfix <code>if</code> and <code>unless</code> for single statements</li>
+            <li class="fragment">Likewise with <code>{}</code> vs <code>do...end.</code></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>More</h2>
+
+          <ul>
+            <li><a href="http://tryruby.org">tryruby.org</a></li>
+            <li><a href="http://poignant.guide">poignant.guide</a></li>
+            <li><a href="http://www.poodr.com">POODR</a></li>
+          </ul>
+        </section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
